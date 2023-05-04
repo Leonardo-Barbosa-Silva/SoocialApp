@@ -5,8 +5,8 @@ import { registerUser, loginUser } from '../../controllers/users/usersController
 const router = express.Router()
 
 // DIRECT USERS CONTROLLERS
-router.post("/register", registerUser)
-router.post("/login", loginUser)
+router.post("/auth/register", registerUser)
+router.post("/auth/login", loginUser)
 
 
 
