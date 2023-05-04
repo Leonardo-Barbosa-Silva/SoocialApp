@@ -27,7 +27,7 @@ export default {
                 picturePath,
                 friends,
                 location,
-                ocupation
+                occupation
             } = req.body
 
             if (!firstName) {
@@ -66,7 +66,7 @@ export default {
                 picturePath,
                 friends,
                 location,
-                ocupation,
+                occupation,
                 viewedProfile: Math.floor(Math.random * 10000),
                 impressions: Math.floor(Math.random * 10000)
             })
@@ -81,7 +81,7 @@ export default {
                     picturePath: userCreated.picturePath,
                     friends: userCreated.friends,
                     location: userCreated.location,
-                    ocupation: userCreated.ocupation,
+                    occupation: userCreated.ocupation,
                     viewedProfile: userCreated.viewedProfile,
                     impressions: userCreated.impressions
                 },
@@ -92,11 +92,11 @@ export default {
             console.log(`${error}`.red)
 
             if (error instanceof mongoose.Error.ValidationError) {
-                res.status(400).json({ message: error.message })
+                return res.status(400).json({ message: error.message })
             } else if (error instanceof mongoose.Error.CastError) {
-                res.status(400).json({ message: error.message })
+                return res.status(400).json({ message: error.message })
             } else {
-                res.status(500).json({
+                return res.status(500).json({
                     error: "Internal server error. Please, try again later."
                 })
             }
@@ -120,57 +120,174 @@ export default {
                 return
             }
 
-            const userExists = await usersModel.findOne({ email })
+            const user = await usersModel.findOne({ email })
 
-            if (!userExists) {
-                res.status(400).json({ message: "User do not exists." })
+            if (!user) {
+                res.status(400).json({ message: "User not found." })
                 return
             }
 
-            const hashedPassword = await bcrypt.hash(password, 10)
-
-            const userCreated = await usersModel.create({
-                firstName,
-                lastName,
-                email,
-                password: hashedPassword,
-                picturePath,
-                friends,
-                location,
-                ocupation,
-                viewedProfile: Math.floor(Math.random * 10000),
-                impressions: Math.floor(Math.random * 10000)
-            })
+            if (!await bcrypt.compare(password, user.password)) {
+                return res.status(400).json({ message: 'Invalid credentials.' })
+            }
             
             res.status(201).json({
-                message: 'User successfully created.',
+                message: 'User logged successfully.',
                 item: {
-                    _id: userCreated._id,
-                    firstName: userCreated.firstName,
-                    lastName: userCreated.lastName,
-                    email: userCreated.email,
-                    picturePath: userCreated.picturePath,
-                    friends: userCreated.friends,
-                    location: userCreated.location,
-                    ocupation: userCreated.ocupation,
-                    viewedProfile: userCreated.viewedProfile,
-                    impressions: userCreated.impressions
+                    _id: user._id,
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    email: user.email,
+                    picturePath: user.picturePath,
+                    friends: user.friends,
+                    location: user.location,
+                    occupation: user.ocupation,
+                    viewedProfile: user.viewedProfile,
+                    impressions: user.impressions
                 },
-                token: jwtGenerate(userCreated._id)
+                token: jwtGenerate(user._id)
             })
 
         } catch (error) {
             console.log(`${error}`.red)
 
             if (error instanceof mongoose.Error.ValidationError) {
-                res.status(400).json({ message: error.message })
+                return res.status(400).json({ message: error.message })
             } else if (error instanceof mongoose.Error.CastError) {
-                res.status(400).json({ message: error.message })
+                return res.status(400).json({ message: error.message })
             } else {
-                res.status(500).json({
+                return res.status(500).json({
                     error: "Internal server error. Please, try again later."
                 })
             }
+        }
+    },
+
+    // @desc Get user data
+    // @route GET v1/api/users/me
+    // @access Private
+    getUser: async (req, res) => {
+        try {
+
+            if (!req.user._id) {
+                res.status(404).json({ message: "User not found." })
+                return
+            }
+            
+            res.status(200).json({
+                message: 'Successfully get user data.',
+                item: {
+                    _id: req.user._id,
+                    firstName: req.user.firstName,
+                    lastName: req.user.lastName,
+                    email: req.user.email,
+                    picturePath: req.user.picturePath,
+                    friends: req.user.friends,
+                    location: req.user.location,
+                    occupation: req.user.ocupation,
+                    viewedProfile: req.user.viewedProfile,
+                    impressions: req.user.impressions
+                }
+            })
+
+        } catch (error) {
+            console.log(`${error}`.red)
+            return res.status(500).json({
+                error: "Internal server error. Please, try again later."
+            })
+        }
+    },
+
+    // @desc Get user friends
+    // @route GET v1/api/users/friends
+    // @access Private
+    getUserFriends: async (req, res) => {
+        try {
+
+            if (!req.user._id) {
+                res.status(404).json({ message: "User not found." })
+                return
+            }
+
+            // CATCH USER FRIENDS
+            const friends = await Promise.all(
+                req.user.friends.map( async (id) => await usersModel.findById(id) )
+            )
+
+            // FORMAT OBJECT THAT REPRESENTS THE USER FRIENDS
+            const friendsFormatted = friends.map(
+                ({ _id, firstName, lastName, email, occupation, location, picturePath }) => (
+                    { _id, firstName, lastName, email, occupation, location, picturePath }
+                )
+            )
+            
+            res.status(200).json({
+                message: 'Successfully get user friends.',
+                item: friendsFormatted
+            })
+
+        } catch (error) {
+            console.log(`${error}`.red)
+            return res.status(500).json({
+                error: "Internal server error. Please, try again later."
+            })
+        }
+    },
+
+    // @desc Add or delete user friend
+    // @route PATCH v1/api/users/friends/:friendID
+    // @access Private
+    addRemoveFriend: async (req, res) => {
+        try {
+
+            // CATCH THE USER FRIEND ID
+            const friendID = req.params
+
+            if (!req.user._id) {
+                res.status(404).json({ message: "User not found." })
+                return
+            }
+
+            const friend = await usersModel.findById(friendID)
+
+            if (!friend) {
+                return res.status(404).json({ message: "Friend not found." })
+            }
+
+            // REMOVE OR ADD USER FRIEND
+            if (req.user.friends.includes(friendID)) {
+                req.user.friends = req.user.friends.filter( (id) => id !== friendID )
+                friend.friends = friend.friends.filter( (id) => id !== req.user._id )
+            } else {
+                req.user.friends.push(friend._id)
+                friend.friends.push(req.user_id)
+            }
+
+            // SAVE USERS MODELS UPDATE
+            await req.user.save()
+            await friend.save()
+
+            // CATCH USER FRIENDS
+            const userFriends = await Promise.all(
+                req.user.friends.map( async (id) => await usersModel.findById(id) )
+            )
+            
+            // FORMAT OBJECT THAT REPRESENTS THE USER FRIENDS
+            const friendsFormatted = userFriends.map(
+                ({ _id, firstName, lastName, email, occupation, location, picturePath }) => (
+                    { _id, firstName, lastName, email, occupation, location, picturePath }
+                )
+            )
+
+            res.status(200).json({
+                item: friendsFormatted
+            })
+
+        } catch (error) {
+            console.log(`${error}`.red)
+            return res.status(500).json({
+                error: "Internal server error. Please, try again later."
+            })
         }
     },
 }

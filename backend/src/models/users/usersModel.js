@@ -40,7 +40,7 @@ const usersSchema = mongoose.Schema(
             default: "",
             max: 20
         },
-        ocupation: {
+        occupation: {
             type: String,
             default: "",
             max: 20

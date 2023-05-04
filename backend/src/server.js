@@ -8,7 +8,7 @@ import path from 'path';
 import cors from 'cors';
 import colors from 'colors'
 import { fileURLToPath } from 'url';
-import router from './routes/router.js'
+import routes from './routes/router.js'
 
 // SERVER CONFIG
 dotenv.config()
@@ -47,4 +47,4 @@ const storage = multer.diskStorage(
 const upload = multer({ storage })
 
 // ROUTES MIDDLEWARES
-app.use(router)
+app.use(routes)
