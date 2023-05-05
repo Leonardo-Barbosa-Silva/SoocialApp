@@ -4,7 +4,7 @@
   "description": "Social media application",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "server-dev": "cd ./backend && npm run server-dev"
   },
   "author": "Leonardo B. Silva",
   "license": "ISC"

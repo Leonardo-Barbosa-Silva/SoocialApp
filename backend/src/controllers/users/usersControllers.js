@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
-import usersModel from '../../models/users/usersModel';
+import usersModel from '../../models/users/usersModel.js';
 import colors from 'colors';
 
 
@@ -289,5 +289,5 @@ export default {
                 error: "Internal server error. Please, try again later."
             })
         }
-    },
+    }
 }

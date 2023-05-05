@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import express from 'express';
-import database from './config/database.js';
+import database from './configs/database.js';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import multer from 'multer'
@@ -32,19 +32,6 @@ app.use(express.urlencoded({ limit: '30mb', extended: true }))
 app.use(cors())
 app.use(helmet.crossOriginResourcePolicy({ policy: 'cross-origin' }))
 app.use("/assets", express.static(path.join(__dirname, 'public/assets')))
-
-// FILES STORAGE
-const storage = multer.diskStorage(
-    {
-        destination: function(req, file, cb) {
-            cb(null, 'public/assets')
-        },
-        filename: function(req, file, cb) {
-            cb(null, file.originalname)
-        }
-    }
-)
-const upload = multer({ storage })
 
 // ROUTES MIDDLEWARES
 app.use(routes)
