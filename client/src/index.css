@@ -1,0 +1,10 @@
+:root {
+  --font-family-primary: 'Rubik', sans-serif;
+  --color-primary: #000;
+}
+
+.App {
+  height: 100%;
+  width: 100%;
+  font-family: var(--font-family-primary);
+}

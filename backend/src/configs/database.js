@@ -19,6 +19,7 @@ const connectDB = async (server) => {
     ).then( (conn) => {
         server()
         console.log(`Database is running on: ${conn.connection.host}`.yellow)
+
     }).catch( (error) => {
         console.log(`${error}`.red)
         process.exit(1)

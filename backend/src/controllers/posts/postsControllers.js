@@ -2,13 +2,13 @@ import postsModel from "../../models/posts/postsModel.js";
 
 
 export default {
-
     // @desc Create a post
     // @route POST v1/api/posts/create
     // @access Private
     createPost: async (req, res) => {
         try {
 
+            // DESCTRUCTURING BODY REQUEST DATA
             const {
                 description,
                 picturePath
@@ -19,6 +19,7 @@ export default {
                 return
             }
 
+            // CREATE A NEW POST
             const postCreated = await postsModel.create({
                 userID: req.user._id,
                 firstName: req.user.firstName,
@@ -62,10 +63,10 @@ export default {
                 return
             }
 
+            // GET ALL POSTS IN DB
             const posts = await postsModel.find()
 
             res.status(201).json({
-                message: "Successfully created a new post.",
                 item: posts
             })
 
@@ -87,10 +88,10 @@ export default {
                 return
             }
 
+            // GET USER POSTS
             const userPosts = await postsModel.find({ userID })
 
             res.status(201).json({
-                message: "Successfully created a new post.",
                 item: userPosts
             })
 
@@ -118,7 +119,7 @@ export default {
             // GET THE POST
             const post = await postsModel.findById(postID)
 
-            // VERIFY IF THE USER ALREADY LIKED THE POST
+            // GET USER LIKE ON POST IF EXISTS
             const likeExists = post.likes.get(req.user._id)
 
             // REMOVE USER LIKE OR ADD IT
@@ -128,6 +129,7 @@ export default {
                 post.likes.set(req.user._id, true)
             }
 
+            // UPDATE THE POST
             const postUpdated = postsModel.findByIdAndUpdate(
                 postID,
                 { likes: post.likes },
@@ -144,5 +146,5 @@ export default {
                 res.status(409).json({ error: "Internal server error. Please, try again later." })
             )
         }
-    },
+    }
 }
