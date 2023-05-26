@@ -2,9 +2,8 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { usersService } from './service.js'
 
 
-
 // USERS INITIAL STATUS STATE
-const initalState = {
+const initialState = {
     mode: 'light',
     user: null,
     token: null,
@@ -14,7 +13,6 @@ const initalState = {
     message: '',
     posts: []
 }
-
 
 // ASYNC THUNK FOR USERS REGISTER
 export const registerUser = createAsyncThunk(
@@ -35,7 +33,7 @@ export const registerUser = createAsyncThunk(
 
 // ASYNC THUNK FOR USERS LOGIN
 export const loginUser = createAsyncThunk(
-    'users/register',
+    'users/login',
     async (userData, thunkAPI) => {
         try {
             return await usersService.login(userData)
@@ -50,13 +48,22 @@ export const loginUser = createAsyncThunk(
     }
 )
 
+// ASYNC THUNK FOR USERS LOGOUT
+export const logoutUser = createAsyncThunk(
+    'users/logout',
+    async (_, { dispatch }) => {
+        await usersService.logout()
+        dispatch(reset())
+    }
+)
+
 
 // USERS SLICE
 export const usersSlice = createSlice({
     name: 'users',
     initialState,
     reducers: {
-        reset: () => initalState,
+        reset: () => initialState,
         setMode: (state) => {
             state.mode = state.mode === "light" ? "dark" : "light"
         } 
@@ -84,6 +91,33 @@ export const usersSlice = createSlice({
                 state.token = null;
                 state.message = action.message
             })
-            .addCase()
+            .addCase(loginUser.pending, (state) => {
+                state.isLoading = true;
+                state.isError = false;
+                state.isSuccess = false;
+                state.message = ''
+            })
+            .addCase(loginUser.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isError = false;
+                state.isSuccess = true;
+                state.user = action.payload.item
+                state.token = action.payload.token
+            })
+            .addCase(loginUser.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.isSuccess = false;
+                state.user = null;
+                state.token = null;
+                state.message = action.message
+            })
+            .addCase(logoutUser.fulfilled, (state) => {
+                state.user = null;
+                state.token = null;
+            })
     }
 })
+
+export const { reset, setMode } = usersSlice.actions
+export default usersSlice.reducer

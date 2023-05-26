@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/Home/index.jsx';
 import LoginPage from './pages/Login/index.jsx';
 import RegisterPage from './pages/Register/index.jsx';
@@ -13,7 +13,7 @@ function App() {
           <Route path='/login' element={<LoginPage />} />
           <Route path='/register' element={<RegisterPage />} />
           <Route path='/home' element={<HomePage />} />
-          <Route path='/profile' element={<ProfilePage />} />
+          <Route path='/profile/:userId' element={<ProfilePage />} />
         </Routes>
       </Router>
     </div>

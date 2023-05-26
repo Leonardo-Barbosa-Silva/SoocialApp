@@ -3,7 +3,6 @@ import express from 'express';
 import database from './configs/database.js';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import multer from 'multer'
 import path from 'path';
 import cors from 'cors';
 import colors from 'colors'

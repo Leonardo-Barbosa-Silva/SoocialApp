@@ -1,6 +1,6 @@
 import axios from 'axios';
 
 
-export const usersAPI = axios.create({
+export default axios.create({
     baseURL: "http://localhost:3001/social/v1/api/users"
 })
