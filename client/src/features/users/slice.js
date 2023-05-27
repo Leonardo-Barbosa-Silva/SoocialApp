@@ -5,7 +5,10 @@ import { usersService } from './service.js'
 // USERS INITIAL STATUS STATE
 const initialState = {
     mode: 'light',
-    user: null,
+    user: {
+        firstName: 'Leonardo',
+        lastName: 'Barbosa'
+    },
     token: null,
     isLoading: false,
     isSuccess: false,
