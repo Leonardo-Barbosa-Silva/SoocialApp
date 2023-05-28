@@ -14,7 +14,7 @@ import { themeSettings } from './theme/index.js';
 function App() {
 
   // GET MODE IN REDUX USERS STATE
-  const mode = useSelector( state => state.mode )
+  const mode = useSelector( state => state.users.mode )
 
   // CREATE MUI THEME BASED ON MODE
   const theme = useMemo( () => createTheme(themeSettings(mode)), [mode] )
