@@ -16,7 +16,7 @@ function App() {
   // GET MODE IN REDUX USERS STATE
   const mode = useSelector( state => state.users.mode )
 
-  // CREATE MUI THEME BASED ON MODE
+  // CREATE MUI THEME WITH REACT USEMEMO
   const theme = useMemo( () => createTheme(themeSettings(mode)), [mode] )
 
   return (

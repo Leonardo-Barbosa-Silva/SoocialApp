@@ -57,7 +57,7 @@ function NavBar() {
 
     return (
         <FlexBetween padding="1rem 6%" backgroundColor={alt}>
-            <FlexBetween gap="1.75rem">
+            <FlexBetween gap="2rem">
                 <Typography
                     fontWeight="bold"
                     fontSize="clamp(1rem, 2rem, 2.75rem)"
@@ -85,142 +85,116 @@ function NavBar() {
                         </IconButton>
                     </FlexBetween>
                 )}
-                {isNonMobileScreen ? (
-                <FlexBetween gap="2rem">
-                    <IconButton onClick={ () => dispatch(setMode()) }>
-                        {theme.palette.mode === "dark" ? (
-                            <DarkMode sx={{ fontSize: "25px" }} />
-                        ) : (
-                            <LightMode sx={{ color: dark, fontSize: "25px" }} />
-                        )}
-                    </IconButton>
-                    <Message sx={{ fontSize: "25px" }} />
-                    <Notifications sx={{ fontSize: "25px" }} />
-                    <Help sx={{ fontSize: "25px" }} />
-                    <FormControl variant="standard">
-                        <Select
-                        value={userFullName}
-                        renderValue={ value => value }
-                        sx={{
-                            backgroundColor: neutralLight,
-                            width: "220px",
-                            borderRadius: "0.25rem",
-                            p: "0.25rem 1rem",
-                            "& .MuiSvgIcon-root": {
-                                pr: "0.25rem",
-                                width: "3rem"
-                            },
-                            "& .MuiSelect-select:focus": {
-                                backgroundColor: neutralLight
-                            }
-                        }}
-                        input={<InputBase />}
-                        >
-                            <MenuItem value={userFullName} label={userFullName}>
-                                <Typography>
-                                    {userFullName}
-                                </Typography>
-                                <Person sx={{
-                                    marginLeft: "15px"
-                                }}/>
-                            </MenuItem>
-                            <MenuItem onClick={ () => dispatch(logoutUser())}>
-                                Log Out
-                                <Logout sx={{
-                                    marginLeft: "15px"
-                                }}/>
-                            </MenuItem>
-                        </Select>
-                    </FormControl>
-                </FlexBetween>
-                ) : (
-                    <>
-                        <IconButton onClick={ () => setIsMobileMenuToggled(!isMobileMenuToggled) } >
-                            <Menu />
-                        </IconButton>
-
-                        {!isNonMobileScreen && isMobileMenuToggled && (
-                            <Box
-                                position="fixed"
-                                right="0"
-                                bottom="0"
-                                height="100%"
-                                zIndex="10"
-                                maxWidth="500px"
-                                minWidth="300px"
-                                backgroundColor={background}
-                            >
-                                <Box display="flex" justifyContent="flex-end">
-                                    <IconButton
-                                        onClick={ () => setIsMobileMenuToggled(!isMobileMenuToggled) }
-                                    >
-                                        <Close />
-                                    </IconButton>
-                                </Box>
-
-                                <FlexBetween 
-                                    display="flex" 
-                                    flexDirection="column"
-                                    justifyContent="center" 
-                                    alignItems="center" 
-                                    gap="3rem"
-                                >
-                                    <IconButton 
-                                        onClick={ () => dispatch(setMode()) }
-                                        sx={{
-                                            fontSize: "25px"
-                                        }}
-                                    >
-                                        {theme.palette.mode === "dark" ? (
-                                            <DarkMode sx={{ fontSize: "25px" }} />
-                                        ) : (
-                                            <LightMode sx={{ color: dark, fontSize: "25px" }} />
-                                        )}
-                                    </IconButton>
-                                    <Message sx={{ fontSize: "25px" }} />
-                                    <Notifications sx={{ fontSize: "25px" }} />
-                                    <Help sx={{ fontSize: "25px" }} />
-                                    <FormControl variant="standard">
-                                        <Select
-                                        value={userFullName}
-                                        renderValue={ value => value }
-                                        sx={{
-                                            backgroundColor: neutralLight,
-                                            width: "220px",
-                                            borderRadius: "0.25rem",
-                                            p: "0.25rem 1rem",
-                                            "& .MuiSvgIcon-root": {
-                                                pr: "0.25rem",
-                                                width: "3rem"
-                                            },
-                                            "& .MuiSelect-select:focus": {
-                                                backgroundColor: neutralLight
-                                            }
-                                        }}
-                                        input={<InputBase />}
-                                        >
-                                            <MenuItem value={userFullName} label={userFullName}>
-                                                <Typography>
-                                                    {userFullName}
-                                                </Typography>
-                                                <Person sx={{
-                                                    marginLeft: "15px"
-                                                }}/>
-                                            </MenuItem>
-                                            <MenuItem onClick={ () => dispatch(logoutUser())}>
-                                                Log Out
-                                                <Logout sx={{
-                                                    marginLeft: "15px"
-                                                }}/>
-                                            </MenuItem>
-                                        </Select>
-                                    </FormControl>
-                                </FlexBetween>
-                            </Box>
-                        )}
-                    </>
-                )}
             </FlexBetween>
+
+            {isNonMobileScreen ? (
+            <FlexBetween gap="2rem" marginRight="0">
+                <IconButton onClick={ () => dispatch(setMode()) }>
+                    {theme.palette.mode === "dark" ? (
+                        <DarkMode sx={{ fontSize: "25px" }} />
+                    ) : (
+                        <LightMode sx={{ color: dark, fontSize: "25px" }} />
+                    )}
+                </IconButton>
+                <Message sx={{ fontSize: "25px" }} />
+                <Notifications sx={{ fontSize: "25px" }} />
+                <Help sx={{ fontSize: "25px" }} />
+                <FormControl variant="standard">
+                    <Select
+                    value={userFullName}
+                    renderValue={ value => value }
+                    sx={{
+                        backgroundColor: neutralLight,
+                        width: "220px",
+                        borderRadius: "0.25rem",
+                        p: "0.25rem 1rem",
+                        "& .MuiSvgIcon-root": {
+                            pr: "0.25rem",
+                            width: "3rem"
+                        },
+                        "& .MuiSelect-select:focus": {
+                            backgroundColor: neutralLight
+                        }
+                    }}
+                    input={<InputBase />}
+                    >
+                        <MenuItem value={userFullName} label={userFullName}>
+                            <Typography>
+                                {userFullName}
+                            </Typography>
+                            <Person sx={{
+                                marginLeft: "15px"
+                            }}/>
+                        </MenuItem>
+                        <MenuItem onClick={ () => dispatch(logoutUser())}>
+                            Log Out
+                            <Logout sx={{
+                                marginLeft: "15px"
+                            }}/>
+                        </MenuItem>
+                    </Select>
+                </FormControl>
+            </FlexBetween>
+            ) : (
+                <>
+                    <IconButton onClick={ () => setIsMobileMenuToggled(!isMobileMenuToggled) } >
+                        <Menu />
+                    </IconButton>
+
+                    {!isNonMobileScreen && isMobileMenuToggled && (
+                        <Box
+                            position="fixed"
+                            right="0"
+                            bottom="0"
+                            height="100%"
+                            zIndex="10"
+                            maxWidth="500px"
+                            minWidth="150px"
+                            backgroundColor={background}
+                        >
+                            <Box display="flex" justifyContent="flex-end">
+                                <IconButton
+                                    onClick={ () => setIsMobileMenuToggled(!isMobileMenuToggled) }
+                                >
+                                    <Close />
+                                </IconButton>
+                            </Box>
+
+                            <FlexBetween 
+                                display="flex" 
+                                flexDirection="column"
+                                justifyContent="center" 
+                                alignItems="center" 
+                                gap="3rem"
+                            >
+                                <IconButton 
+                                    onClick={ () => dispatch(setMode()) }
+                                    sx={{
+                                        fontSize: "25px"
+                                    }}
+                                >
+                                    {theme.palette.mode === "dark" ? (
+                                        <DarkMode sx={{ fontSize: "25px" }} />
+                                    ) : (
+                                        <LightMode sx={{ color: dark, fontSize: "25px" }} />
+                                    )}
+                                </IconButton>
+                                <Message sx={{ fontSize: "25px" }} />
+                                <Notifications sx={{ fontSize: "25px" }} />
+                                <Help sx={{ fontSize: "25px" }} />
+                                <IconButton
+                                    onClick={ () => dispatch(logoutUser())}
+                                    sx={{
+                                        fontSize: "25px"
+                                    }}
+                                >
+                                    <Logout sx={{ color: dark, fontSize: "25px" }} />
+                                </IconButton>
+                            </FlexBetween>
+                        </Box>
+                    )}
+                </>
+            )}
         </FlexBetween>
     )
 }
