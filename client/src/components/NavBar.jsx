@@ -39,7 +39,7 @@ function NavBar() {
     // USER REDUX STATE
     const user = useSelector( state => state.users.user)
 
-    // VERIFY MIN SCREEN WIDTH
+    // VERIFY MIN SCREENS WIDTH
     const isNonMobileScreen = useMediaQuery("(min-width: 1000px)")
 
     // THEME AND COLORS CONFIGS
@@ -70,7 +70,7 @@ function NavBar() {
                         }
                     }}
                 >
-                    SocialApp
+                    SoocialApp
                 </Typography>
                 {isNonMobileScreen && (
                     <FlexBetween

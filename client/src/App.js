@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/Home/index.jsx';
-import LoginPage from './pages/Login/index.jsx';
-import RegisterPage from './pages/Register/index.jsx';
+import AuthPage from './pages/Auth/index.jsx';
 import ProfilePage from './pages/Profile/index.jsx';
 import ErrorPage from './pages/Error/index.jsx';
 import { useMemo } from 'react';
@@ -25,9 +24,8 @@ function App() {
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <Routes>
-            <Route path='/' element={<LoginPage />} />
-            <Route path='/login' element={<LoginPage />} />
-            <Route path='/register' element={<RegisterPage />} />
+            <Route path='/' element={<AuthPage />} />
+            <Route path='/auth' element={<AuthPage />} />
             <Route path='/home' element={<HomePage />} />
             <Route path='/profile/:userId' element={<ProfilePage />} />
             <Route path='*' element={<ErrorPage />} />
