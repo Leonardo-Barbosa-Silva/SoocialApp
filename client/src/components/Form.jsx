@@ -94,10 +94,11 @@ function Form() {
     }
 
     useEffect( () => {
+        if (isLogged) {
+            navigate("/home")
+        }
         if (isRegistered) {
             setPageType("login")
-        } else if (isLogged) {
-            navigate("/home")
         }
     }, [ isLogged, isRegistered, navigate ])
 

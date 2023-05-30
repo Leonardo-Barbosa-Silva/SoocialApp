@@ -14,16 +14,12 @@ import usersReducers from './features/users/slice.js'
 //import postsReducers from './features/posts/slice.js'
 
 
-// REDUX PERSIST CONFIG
+
 const persistConfig = { key: 'root', storage, version: 1 };
 const usersReducersPersisted = persistReducer(persistConfig, usersReducers)
-//const postsReducersPersisted = persistReducer(persistConfig, postsReducers)
 
-// REDUX STORE CONFIG
 const storeConfigured = store(usersReducersPersisted)
 
-
-// REACT RENDER
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>

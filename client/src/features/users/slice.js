@@ -66,6 +66,9 @@ export const usersSlice = createSlice({
     initialState,
     reducers: {
         reset: () => initialState,
+        resetMessage: (state) => { 
+            state.message = ''
+        },
         setMode: (state) => {
             state.mode = state.mode === "light" ? "dark" : "light"
         } 
@@ -79,11 +82,12 @@ export const usersSlice = createSlice({
                 state.message = ''
             })
             .addCase(registerUser.fulfilled, (state, action) => {
+                console.log(action)
                 state.isLoading = false
                 state.isError = false
                 state.isSuccess = true
-                state.user = action.payload.item
-                state.token = action.payload.token
+                state.user = action.payload.data.item
+                state.token = action.payload.data.token
                 state.isRegistered = true
                 state.isLogged = false
                 state.message = action.payload
@@ -108,8 +112,8 @@ export const usersSlice = createSlice({
                 state.isLoading = false
                 state.isError = false
                 state.isSuccess = true
-                state.user = action.payload.item
-                state.token = action.payload.token
+                state.user = action.payload.data.item
+                state.token = action.payload.data.token
                 state.isRegistered = true
                 state.isLogged = true
                 state.message = action.payload
@@ -134,5 +138,5 @@ export const usersSlice = createSlice({
     }
 })
 
-export const { reset, setMode } = usersSlice.actions
+export const { reset, setMode, resetMessage } = usersSlice.actions
 export default usersSlice.reducer

@@ -1,7 +1,8 @@
-import { useSelector } from 'react-redux'
-import { useEffect, useState } from 'react'
-import { Box, Typography, useTheme, useMediaQuery, CircularProgress } from '@mui/material'
-import Form from '../../components/Form'
+import { useSelector, useDispatch } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { resetMessage } from '../../features/users/slice';
+import { Box, Typography, useTheme, useMediaQuery, CircularProgress } from '@mui/material';
+import Form from '../../components/Form';
 
 
 function AuthPage() {
@@ -11,19 +12,35 @@ function AuthPage() {
 
     const isNonMobileScreen = useMediaQuery("(min-width: 1000px)")
 
-    const { isSuccess, isError, isLoading, message } = useSelector( state => state.users )
+    const { isError, isLoading, message } = useSelector( state => state.users )
+
+    const dispatch = useDispatch()
 
     useEffect( () => {
-        if (isLoading) {
-            setShowSpinner(true);
-        } else {
-            const timer = setTimeout(() => {
-                setShowSpinner(false);
-            }, 3500);
+        let timer1;
+        let timer2;
 
-            return () => clearTimeout(timer);
+        if (isLoading) {
+            setShowSpinner(true)
+        } else {    
+            timer1 = setTimeout( () => {
+                setShowSpinner(false)
+
+                if (isError && message) {
+                    timer2 = setTimeout( () => {
+                        dispatch(resetMessage())
+                    }, 3000)
+                }
+
+            }, 3500);
         }
-    }, [isLoading] )
+
+        return () => {
+            clearTimeout(timer1)
+            clearTimeout(timer2)
+        }
+
+    }, [isLoading, isError, message, dispatch] )
 
     return (
         <Box>
@@ -73,6 +90,16 @@ function AuthPage() {
                         </Typography>
 
                         <Form />
+
+                        <Typography
+                            sx={{
+                                color: theme.palette.primary.error,
+                                fontSize: "0.75rem",
+                                mt: "30px"
+                            }}
+                        >
+                            {isError && message && `${message}`}
+                        </Typography>
                     </Box>
                 </>
             )}
