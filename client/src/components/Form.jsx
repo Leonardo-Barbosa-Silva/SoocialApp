@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
     Box,
     Typography,
@@ -11,16 +11,15 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { loginUser, registerUser } from '../features/users/slice';
 import Dropzone from 'react-dropzone';
 import FlexBetween from './FlexBetween';
 
 
-// CREATE FORM SCHEMA FOR USERS REGISTER
 const registerSchema = yup.object().shape({
-    firstName: yup.string().required("required"),
-    lastName: yup.string().required("required"),
+    firstName: yup.string().min(2, 'First name too short').required("required"),
+    lastName: yup.string().min(2, 'First name too short').required("required"),
     email: yup.string().email("invalid email").required("required"),
     password: yup.string().required("required"),
     location: yup.string().required("required"),
@@ -28,13 +27,11 @@ const registerSchema = yup.object().shape({
     picture: yup.string().required("required")
 })
 
-// CREATE FORM SCHEMA FOR USERS LOGIN
 const loginSchema = yup.object().shape({
     email: yup.string().email("invalid email").required("required"),
     password: yup.string().required("required")
 })
 
-// INITAL REGISTER FORM VALUES
 const initialValuesRegister = {
     firstName: "",
     lastName: "",
@@ -45,28 +42,64 @@ const initialValuesRegister = {
     picture: ""   
 }
 
-// INITIAL LOGIN FORM VALUES
 const initialValuesLogin = {
+    firstName: "",
+    lastName: "",
     email: "",
-    password: ""
+    password: "",
+    location: "",
+    occupation: "",
+    picture: ""   
 }
 
 
 function Form() {
-    // REACT STATE THAT REPRESENTS WHICH PAGE
     const [ pageType, setPageType ] = useState('login')
 
-    // GET MUI THEME PREVIOUSLY CONFIGURED
+    const isRegistered = useSelector( state => state.users.isRegistered)
+    const isLogged = useSelector( state => state.users.isLogged)
+
     const { palette } = useTheme()
 
-    // REDUX AND ROUTER METHODS
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
-    // VERIFY MIN SCREENS WIDTH
     const isNonMobileScreen = useMediaQuery("(min-width: 600px)")
 
-    const handleFormSubmit = async () => {}
+    
+    const handleFormSubmit = async (values, onSubmitProps) => {
+        pageType === "login" ? (
+            await login(values, onSubmitProps)
+        ) : (
+            await register(values, onSubmitProps)
+        )
+    }
+
+    const register = async (values, onSubmitProps) => {
+        const formData = new FormData()
+        for (let value in values) {
+            formData.append(value, values[value])
+        }
+        formData.append("picturePath", values.picture.name)
+
+        dispatch(registerUser(formData))
+
+        onSubmitProps.resetForm()
+    }
+
+    const login = async (values, onSubmitProps) => {
+        dispatch(loginUser(values))
+
+        onSubmitProps.resetForm()
+    }
+
+    useEffect( () => {
+        if (isRegistered) {
+            setPageType("login")
+        } else if (isLogged) {
+            navigate("/home")
+        }
+    }, [ isLogged, isRegistered, navigate ])
 
     return (
         <Formik
@@ -126,11 +159,26 @@ function Form() {
                                 <TextField
                                     label="E-mail"
                                     size="small"
+                                    type="email"
                                     name="email"
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                     error={Boolean(touched.email) && Boolean(errors.email)}
                                     helperText={touched.email && errors.email}
+                                    sx={{
+                                        gridColumn: "span 4"
+                                    }}
+                                />
+                                <TextField
+                                    label="Password"
+                                    size="small"
+                                    type="password"
+                                    name="password" 
+                                    value={values.password}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    error={Boolean(touched.password) && Boolean(errors.password)}
+                                    helperText={touched.password && errors.password}
                                     sx={{
                                         gridColumn: "span 4"
                                     }}
@@ -244,6 +292,7 @@ function Form() {
                                 color: palette.background.alt,
                                 "&:hover": { color: palette.primary.main }
                             }}
+                            onSubmit={handleSubmit}
                         >
                             {pageType === "login" ? "LOGIN" : "REGISTER"}
                         </Button>

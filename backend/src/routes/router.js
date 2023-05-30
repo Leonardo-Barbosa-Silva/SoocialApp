@@ -6,9 +6,11 @@ import postsRoutes from './posts/postsRoutes.js'
 const router = express.Router()
 
 // DIRECT USER ROUTES
-router.use("v1/api/users", usersRoutes)
+router.use("/v1/api/users", usersRoutes)
 
 // DIRECT POST ROUTES
-router.use("v1/api/posts", postsRoutes)
+router.use("/v1/api/posts", postsRoutes)
+
+router.use("/v1/api/posts", postsRoutes)
 
 export default router;

@@ -67,8 +67,8 @@ export default {
                 friends,
                 location,
                 occupation,
-                viewedProfile: Math.floor(Math.random * 10000),
-                impressions: Math.floor(Math.random * 10000)
+                viewedProfile: Math.floor(Math.random() * 10000),
+                impressions: Math.floor(Math.random() * 10000)
             })
             
             res.status(201).json({

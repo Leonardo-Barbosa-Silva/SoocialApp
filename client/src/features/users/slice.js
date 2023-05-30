@@ -2,14 +2,12 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { usersService } from './service.js'
 
 
-// USERS INITIAL STATUS STATE
 const initialState = {
     mode: 'light',
-    user: {
-        firstName: 'Leonardo',
-        lastName: 'Barbosa'
-    },
+    user: null,
     token: null,
+    isRegistered: false,
+    isLogged: false,
     isLoading: false,
     isSuccess: false,
     isError: false,
@@ -17,7 +15,7 @@ const initialState = {
     posts: []
 }
 
-// ASYNC THUNK FOR USERS REGISTER
+
 export const registerUser = createAsyncThunk(
     'users/register',
     async (userData, thunkAPI) => {
@@ -27,14 +25,15 @@ export const registerUser = createAsyncThunk(
             const message = (error.response && error.response.data && error.response.data.message) ||
             (error.response && error.response.data && error.response.data.error)
 
-            localStorage.removeItem('userToken')
+            localStorage.removeItem('user')
+            localStorage.removeItem('token')
 
             return thunkAPI.rejectWithValue(message)
         }
     }
 )
 
-// ASYNC THUNK FOR USERS LOGIN
+
 export const loginUser = createAsyncThunk(
     'users/login',
     async (userData, thunkAPI) => {
@@ -44,14 +43,15 @@ export const loginUser = createAsyncThunk(
             const message = (error.response && error.response.data && error.response.data.message) ||
             (error.response && error.response.data && error.response.data.error)
 
-            localStorage.removeItem('userToken')
+            localStorage.removeItem('user')
+            localStorage.removeItem('token')
 
             return thunkAPI.rejectWithValue(message)
         }
     }
 )
 
-// ASYNC THUNK FOR USERS LOGOUT
+
 export const logoutUser = createAsyncThunk(
     'users/logout',
     async (_, { dispatch }) => {
@@ -61,7 +61,6 @@ export const logoutUser = createAsyncThunk(
 )
 
 
-// USERS SLICE
 export const usersSlice = createSlice({
     name: 'users',
     initialState,
@@ -74,50 +73,63 @@ export const usersSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(registerUser.pending, (state) => {
-                state.isLoading = true;
-                state.isError = false;
-                state.isSuccess = false;
+                state.isLoading = true
+                state.isError = false
+                state.isSuccess = false
                 state.message = ''
             })
             .addCase(registerUser.fulfilled, (state, action) => {
-                state.isLoading = false;
-                state.isError = false;
-                state.isSuccess = true;
+                state.isLoading = false
+                state.isError = false
+                state.isSuccess = true
                 state.user = action.payload.item
                 state.token = action.payload.token
+                state.isRegistered = true
+                state.isLogged = false
+                state.message = action.payload
             })
             .addCase(registerUser.rejected, (state, action) => {
-                state.isLoading = false;
-                state.isError = true;
-                state.isSuccess = false;
-                state.user = null;
-                state.token = null;
-                state.message = action.message
+                state.isLoading = false
+                state.isError = true
+                state.isSuccess = false
+                state.user = null
+                state.token = null
+                state.message = action.payload
+                state.isRegistered = false
+                state.isLogged = false
             })
             .addCase(loginUser.pending, (state) => {
-                state.isLoading = true;
-                state.isError = false;
-                state.isSuccess = false;
+                state.isLoading = true
+                state.isError = false
+                state.isSuccess = false
                 state.message = ''
             })
             .addCase(loginUser.fulfilled, (state, action) => {
-                state.isLoading = false;
-                state.isError = false;
-                state.isSuccess = true;
+                state.isLoading = false
+                state.isError = false
+                state.isSuccess = true
                 state.user = action.payload.item
                 state.token = action.payload.token
+                state.isRegistered = true
+                state.isLogged = true
+                state.message = action.payload
             })
             .addCase(loginUser.rejected, (state, action) => {
-                state.isLoading = false;
-                state.isError = true;
-                state.isSuccess = false;
-                state.user = null;
-                state.token = null;
-                state.message = action.message
+                state.isLoading = false
+                state.isError = true
+                state.isSuccess = false
+                state.user = null
+                state.token = null
+                state.message = action.payload
+                state.isRegistered = false
+                state.isLogged = false
             })
             .addCase(logoutUser.fulfilled, (state) => {
-                state.user = null;
-                state.token = null;
+                state.user = null
+                state.token = null
+                state.isRegistered = false
+                state.isLogged = false
+                state.message = ''
             })
     }
 })

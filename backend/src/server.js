@@ -38,4 +38,4 @@ app.use(helmet.crossOriginResourcePolicy({ policy: 'cross-origin' }))
 app.use("/assets", express.static(path.join(__dirname, 'public/assets')))
 
 // ROUTER MIDDLEWARE
-app.use("/social/app", routes)
+app.use("/soocial", routes)
