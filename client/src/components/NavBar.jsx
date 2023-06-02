@@ -29,20 +29,17 @@ import FlexBetween from './FlexBetween';
 
 
 function NavBar() {
-    // STATE THAT REPRESENTS TOGGLED MOBILE MENU
     const [ isMobileMenuToggled, setIsMobileMenuToggled ] = useState(false)
 
-    // REDUX AND ROUTER METHODS
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
-    // USER REDUX STATE
     const user = useSelector( state => state.users.user)
 
-    // VERIFY MIN SCREENS WIDTH
     const isNonMobileScreen = useMediaQuery("(min-width: 1000px)")
 
-    // THEME AND COLORS CONFIGS
+    const renderIconSearch = useMediaQuery("(min-width: 1090px)")
+
     const theme = useTheme()
     const neutralLight = theme.palette.neutral.light
     const dark = theme.palette.neutral.dark
@@ -50,14 +47,11 @@ function NavBar() {
     const primaryLight = theme.palette.primary.light
     const alt = theme.palette.background.light
 
-    // GET USER FULL NAME
     const userFullName = `${user.firstName} ${user.lastName}`
 
-    console.log(theme.palette.mode)
-
     return (
-        <FlexBetween padding="1rem 6%" backgroundColor={alt}>
-            <FlexBetween gap="2rem">
+        <FlexBetween padding="1rem 6%" backgroundColor={alt} gap="1rem">
+            <FlexBetween gap="1.75rem">
                 <Typography
                     fontWeight="bold"
                     fontSize="clamp(1rem, 2rem, 2.75rem)"
@@ -76,13 +70,21 @@ function NavBar() {
                     <FlexBetween
                         backgroundColor={neutralLight}
                         borderRadius="9px"
-                        gap="3rem"
-                        padding="0.1rem 1.5rem"
+                        gap="1rem"
+                        padding="0.12rem 1.35rem"
                     >
-                        <InputBase placeholder="Search..."/>
-                        <IconButton>
-                            <Search />
-                        </IconButton>
+                        <InputBase
+                            placeholder="Search..."
+                        />
+
+                        {renderIconSearch && (
+                            <IconButton
+                            
+                            >
+                                <Search />
+                            </IconButton>
+                        )}
+
                     </FlexBetween>
                 )}
             </FlexBetween>
@@ -101,22 +103,22 @@ function NavBar() {
                 <Help sx={{ fontSize: "25px" }} />
                 <FormControl variant="standard">
                     <Select
-                    value={userFullName}
-                    renderValue={ value => value }
-                    sx={{
-                        backgroundColor: neutralLight,
-                        width: "220px",
-                        borderRadius: "0.25rem",
-                        p: "0.25rem 1rem",
-                        "& .MuiSvgIcon-root": {
-                            pr: "0.25rem",
-                            width: "3rem"
-                        },
-                        "& .MuiSelect-select:focus": {
-                            backgroundColor: neutralLight
-                        }
-                    }}
-                    input={<InputBase />}
+                        value={userFullName}
+                        renderValue={ value => value }
+                        sx={{
+                            backgroundColor: neutralLight,
+                            width: "220px",
+                            borderRadius: "0.25rem",
+                            p: "0.25rem 1rem",
+                            "& .MuiSvgIcon-root": {
+                                pr: "0.25rem",
+                                width: "3rem"
+                            },
+                            "& .MuiSelect-select:focus": {
+                                backgroundColor: neutralLight
+                            }
+                        }}
+                        input={<InputBase />}
                     >
                         <MenuItem value={userFullName} label={userFullName}>
                             <Typography>

@@ -12,9 +12,7 @@
 
 function App() {
   const mode = useSelector( state => state.users.mode )
-
   const theme = useMemo( () => createTheme(themeSettings(mode)), [mode] )
-
   const isLogged = useSelector( (state) => state.users.isLogged )
 
   return (
